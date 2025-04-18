@@ -1,0 +1,2 @@
+I am working on a fastapi based docker based backend which communicates with postgres db defined in docker compose using SQLAlchemy models. I use poetry for my dependency management. This is a learning project, so introduce tech and best practices without sticking to unnecessary complications when making the product real life.
+
