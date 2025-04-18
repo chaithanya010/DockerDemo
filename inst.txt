@@ -1,2 +1,44 @@
 I am working on a fastapi based docker based backend which communicates with postgres db defined in docker compose using SQLAlchemy models. I use poetry for my dependency management. This is a learning project, so introduce tech and best practices without sticking to unnecessary complications when making the product real life.
 
+# alembic/env.py
+
+# ... (imports, path setup, Base import, target_metadata = Base.metadata) ...
+
+
+
+# ... (run_migrations_offline remains the same, using url = get_url()) ...
+
+def run_migrations_online() -> None:
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
+    # --- Revised Block ---
+    # Create a dictionary with the configuration section data
+    # This forces configparser to read the section initially
+    connectable_config = config.get_section(config.config_ini_section)
+
+    # *Explicitly* set/override the 'sqlalchemy.url' value
+    # in our dictionary using the value retrieved from the environment
+    # by get_url(). This bypasses the interpolation issue for the URL.
+    connectable_config["sqlalchemy.url"] = get_url()
+
+    # Create the engine using the modified configuration dictionary
+    connectable = engine_from_config(
+        connectable_config, # Use the modified dictionary
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+    # --- End of Revised Block ---
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection, target_metadata=target_metadata
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
+
+# ... (if context.is_offline_mode() block remains the same) ...
