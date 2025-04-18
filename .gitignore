@@ -1,1 +1,35 @@
+# your-project-name/.gitignore
+
+# Environment files
 .env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Docker
+docker-volumes/
+postgres_data/ # Although docker manages it, good to ignore if mapped locally somehow
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE files
+.idea/
+.vscode/
