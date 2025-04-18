@@ -1,0 +1,26 @@
+# your-project-name/docker-compose.yml
+version: '3.8' # Specify docker-compose version
+
+services:
+  db:
+    image: postgres:15-alpine # Use official Postgres image (version 15, alpine variant is smaller)
+    container_name: my_project_db # Give the container a specific name
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} # Read user from .env file
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Read password from .env file
+      POSTGRES_DB: ${POSTGRES_DB} # Read database name from .env file
+    ports:
+      - "${POSTGRES_PORT}:5432" # Map host port to container port 5432 (read from .env)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist database data using a named volume
+    networks:
+      - app_network # Connect to a custom network (good practice)
+    restart: unless-stopped # Restart policy
+
+volumes:
+  postgres_data: # Define the named volume for persistence
+    driver: local
+
+networks:
+  app_network: # Define the custom network
+    driver: bridge
